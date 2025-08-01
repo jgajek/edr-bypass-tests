@@ -1,7 +1,6 @@
 # EDR Bypass Testing Automation Framework
 
-**Version:** 2.0.0  
-**Last Updated:** January 27, 2025
+**Version:** 2.0.0
 
 ## Overview
 
@@ -221,7 +220,7 @@ Detailed results are saved in JSON format:
   "TechniqueName": "Safe Mode Boot via bcdedit",
   "Status": "BYPASSED",
   "Message": "Technique executed successfully",
-  "Timestamp": "2025-01-27 14:30:45",
+  "Timestamp": "YYYY-MM-DD HH:MM:SS",
   "Details": {
     "BypassApplied": true,
     "BypassVerified": true,
@@ -529,7 +528,7 @@ When contributing new techniques or improvements:
 
 ## Version History
 
-### Version 2.0.0 (January 2025)
+### Version 2.0.0
 - Complete framework redesign with standardized patterns
 - Implemented BP1000 series (Safe Mode Boot bypass) - 4 variants
 - Implemented BP1001 series (Pre-Boot EDR Bypass) - 1 variant
@@ -537,7 +536,7 @@ When contributing new techniques or improvements:
 - Advanced features: partial success handling, registry save/restore, pre-boot execution
 - Comprehensive documentation and troubleshooting guides
 
-### Version 1.0.0 (Legacy)
+### Version 1.0.0
 - Initial framework concept
 - Basic technique implementations
 - Limited standardization
