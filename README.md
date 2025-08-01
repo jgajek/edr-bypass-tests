@@ -439,26 +439,6 @@ This framework is designed exclusively for:
 - Using techniques only in controlled environments
 - Maintaining appropriate documentation and audit trails
 
-## Performance Characteristics
-
-### Execution Times
-
-| Technique Category | Typical Duration | Complexity Factor |
-|------------------|------------------|-------------------|
-| **Safe Mode (BP1000)** | 5-30 seconds | Boot configuration changes |
-| **Pre-Boot Execute (BP1001)** | 10-30 seconds | Binary deployment + registry config |
-| **Service Disruption (BP1002)** | 3-45 seconds | Service complexity dependent |
-| **Registry Operations** | 1-10 seconds | Fast registry modifications |
-| **GUI Automation** | 10-60 seconds | User interface dependent |
-| **Save/Restore** | 15-45 seconds | Hive file operations |
-
-### Resource Requirements
-
-- **Memory**: 20-100 MB during execution
-- **Disk**: Minimal (logs + temporary files for BP1002.6 + binary deployment for BP1001)
-- **CPU**: Low (brief spikes during operations)
-- **Network**: None (all operations are local)
-
 ## Troubleshooting
 
 ### Common Issues
