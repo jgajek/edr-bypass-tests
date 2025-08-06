@@ -12,9 +12,6 @@ param(
     [switch]$SkipReversion = $false,
     
     [Parameter(Mandatory=$false)]
-    [switch]$Verbose = $false,
-    
-    [Parameter(Mandatory=$false)]
     [string]$BinaryName = "bootexecute.exe",
     
     [Parameter(Mandatory=$false)]
@@ -87,7 +84,7 @@ function Write-Log {
     switch ($Level) {
         "ERROR" { Write-Host $logEntry -ForegroundColor Red }
         "WARN"  { Write-Host $logEntry -ForegroundColor Yellow }
-        "DEBUG" { if ($Verbose) { Write-Host $logEntry -ForegroundColor Gray } }
+        "DEBUG" { if ($VerbosePreference -eq 'Continue') { Write-Host $logEntry -ForegroundColor Gray } }
         default { Write-Host $logEntry -ForegroundColor White }
     }
     
@@ -319,9 +316,9 @@ function Test-BypassSuccess {
         
         # Verify binary deployment
         if (Test-Path $global:TargetBinaryPath) {
-            Write-Log "✓ Binary successfully deployed to System32" -Level "INFO"
+            Write-Log "[OK] Binary successfully deployed to System32" -Level "INFO"
         } else {
-            Write-Log "✗ Binary not found in System32" -Level "ERROR"
+            Write-Log "[FAIL] Binary not found in System32" -Level "ERROR"
             $success = $false
         }
         
@@ -332,15 +329,15 @@ function Test-BypassSuccess {
             $binaryName = [System.IO.Path]::GetFileNameWithoutExtension($BinaryName)
             
             if ($currentValue.$RegistryMethod -contains $binaryName) {
-                Write-Log "✓ Registry correctly configured: $RegistryMethod contains $binaryName" -Level "INFO"
+                Write-Log "[OK] Registry correctly configured: $RegistryMethod contains $binaryName" -Level "INFO"
             } else {
-                Write-Log "✗ Registry verification failed: $RegistryMethod does not contain $binaryName" -Level "ERROR"
+                Write-Log "[FAIL] Registry verification failed: $RegistryMethod does not contain $binaryName" -Level "ERROR"
                 Write-Log "Current value: $($currentValue.$RegistryMethod -join ', ')" -Level "DEBUG"
                 $success = $false
             }
         }
         catch {
-            Write-Log "✗ Failed to read registry value: $_" -Level "ERROR"
+            Write-Log "[FAIL] Failed to read registry value: $_" -Level "ERROR"
             $success = $false
         }
         
@@ -444,10 +441,10 @@ function Test-ReversionSuccess {
         
         # Verify binary removal
         if (Test-Path $global:TargetBinaryPath) {
-            Write-Log "✗ Binary still exists in System32" -Level "ERROR"
+            Write-Log "[FAIL] Binary still exists in System32" -Level "ERROR"
             $success = $false
         } else {
-            Write-Log "✓ Binary successfully removed from System32" -Level "INFO"
+            Write-Log "[OK] Binary successfully removed from System32" -Level "INFO"
         }
         
         # Verify registry restoration
@@ -460,26 +457,26 @@ function Test-ReversionSuccess {
             if ($originalValue -eq $null) {
                 # Should not exist
                 if ($currentValue) {
-                    Write-Log "✗ Registry value still exists (should have been removed)" -Level "ERROR"
+                    Write-Log "[FAIL] Registry value still exists (should have been removed)" -Level "ERROR"
                     $success = $false
                 } else {
-                    Write-Log "✓ Registry value correctly removed" -Level "INFO"
+                    Write-Log "[OK] Registry value correctly removed" -Level "INFO"
                 }
             } else {
                 # Should match original
                 if ($currentValue -and (Compare-Object $currentValue.$RegistryMethod $originalValue) -eq $null) {
-                    Write-Log "✓ Registry value correctly restored" -Level "INFO"
+                    Write-Log "[OK] Registry value correctly restored" -Level "INFO"
                 } else {
-                    Write-Log "✗ Registry value not properly restored" -Level "ERROR"
+                    Write-Log "[FAIL] Registry value not properly restored" -Level "ERROR"
                     $success = $false
                 }
             }
         }
         catch {
             if ($originalValue -eq $null) {
-                Write-Log "✓ Registry value correctly removed (error expected)" -Level "INFO"
+                Write-Log "[OK] Registry value correctly removed (error expected)" -Level "INFO"
             } else {
-                Write-Log "✗ Failed to verify registry restoration: $_" -Level "ERROR"
+                Write-Log "[FAIL] Failed to verify registry restoration: $_" -Level "ERROR"
                 $success = $false
             }
         }
